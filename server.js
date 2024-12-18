@@ -13,6 +13,11 @@ app.use(cors({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Root endpoint for testing the server
+app.get('/', (req, res) => {
+  res.send('Server is running! Use POST /contact to send messages.');
+});
+
 // API endpoint for form submission
 app.post('/contact', (req, res) => {
   const { fullname, email, message } = req.body;
