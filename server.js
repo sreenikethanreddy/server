@@ -8,7 +8,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'https://your-portfolio-domain.com', // Replace with your portfolio's actual domain
+  origin: 'https://sreenikethanreddy.github.io/portfolio/', // Replace with your portfolio's actual domain
 }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
