@@ -1,9 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
+const cors = require('cors'); // Added CORS support
 require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
+
+// Middleware
+app.use(cors({
+  origin: 'https://your-portfolio-domain.com', // Replace with your portfolio's actual domain
+}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -11,7 +17,7 @@ app.use(bodyParser.json());
 app.post('/contact', (req, res) => {
   const { fullname, email, message } = req.body;
 
-  // Send email
+  // Email transport setup
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -27,18 +33,18 @@ app.post('/contact', (req, res) => {
     text: `Name: ${fullname}\nEmail: ${email}\nMessage: ${message}`,
   };
 
+  // Send email
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      console.error('Email Error:', err);
-      return res.status(500).send('Email Error');
+      console.error('Email Error:', err.message);
+      return res.status(500).json({ error: 'Failed to send email', details: err.message });
     }
-
-    res.send('Message Sent Successfully!');
+    res.json({ success: true, message: 'Message Sent Successfully!' });
   });
 });
 
 // Start the server
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Use dynamic port for Render
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
